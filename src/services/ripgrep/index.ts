@@ -22,29 +22,13 @@ Key components:
 
 The search results include:
 - Relative file paths
-- 2 lines of context before and after each match
+- Two lines of context before and after each match
 - Matches formatted with pipe characters for easy reading
 
-Usage example:
+Example usage:
+```
 const results = await regexSearchFiles('/path/to/cwd', '/path/to/search', 'TODO:', '*.ts');
-
-rel/path/to/app.ts
-│----
-│function processData(data: any) {
-│  // Some processing logic here
-│  // TODO: Implement error handling
-│  return processedData;
-│}
-│----
-
-rel/path/to/helper.ts
-│----
-│  let result = 0;
-│  for (let i = 0; i < input; i++) {
-│    // TODO: Optimize this function for performance
-│    result += Math.pow(i, 2);
-│  }
-│----
+```
 */
 
 const isWindows = /^win/.test(process.platform)
