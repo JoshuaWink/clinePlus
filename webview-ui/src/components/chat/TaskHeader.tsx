@@ -3,6 +3,7 @@ import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import { useWindowSize } from "react-use"
 import { mentionRegexGlobal } from "../../../../src/shared/context-mentions"
 import { ClineMessage } from "../../../../src/shared/ExtensionMessage"
+import { GIT_MUST_BE_INSTALLED_ERROR } from "../../../../src/shared/checkpoints"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { formatLargeNumber } from "../../utils/format"
 import { formatSize } from "../../utils/size"
@@ -461,7 +462,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 									<i className="codicon codicon-warning" />
 									<span>
 										{checkpointTrackerErrorMessage}
-										{checkpointTrackerErrorMessage.includes("Git must be installed to use checkpoints.") && (
+                                                                               {checkpointTrackerErrorMessage.includes(GIT_MUST_BE_INSTALLED_ERROR) && (
 											<>
 												{" "}
 												<a

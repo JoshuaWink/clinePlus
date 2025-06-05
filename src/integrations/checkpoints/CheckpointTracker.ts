@@ -6,6 +6,7 @@ import * as vscode from "vscode"
 import { ClineProvider } from "../../core/webview/ClineProvider"
 import { fileExistsAtPath } from "../../utils/fs"
 import { globby } from "globby"
+import { GIT_MUST_BE_INSTALLED_ERROR } from "../../shared/checkpoints"
 
 class CheckpointTracker {
 	private providerRef: WeakRef<ClineProvider>
@@ -33,12 +34,12 @@ class CheckpointTracker {
 				return undefined // Don't create tracker when disabled
 			}
 
-			// Check if git is installed by attempting to get version
-			try {
-				await simpleGit().version()
-			} catch (error) {
-				throw new Error("Git must be installed to use checkpoints.") // FIXME: must match what we check for in TaskHeader to show link
-			}
+                        // Check if git is installed by attempting to get version
+                        try {
+                                await simpleGit().version()
+                        } catch (error) {
+                                throw new Error(GIT_MUST_BE_INSTALLED_ERROR)
+                        }
 
 			const cwd = await CheckpointTracker.getWorkingDirectory()
 			const newTracker = new CheckpointTracker(provider, taskId, cwd)
