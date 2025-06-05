@@ -62,3 +62,30 @@ Functions below manage state, workspace data, or formatting without relying on p
 ---
 
 This expanded list should make it easier to locate every function in `src/core` and understand whether it depends on language model output or simply performs deterministic work.
+
+## Repository Overview
+
+The repository's root contains documentation, assets, and the main source tree. Notable folders:
+
+- `src/` – extension backend, API providers, integrations, and utilities
+- `webview-ui/` – React frontend powering the webview
+- `docs/` – usage guides and architecture notes
+- `assets/` – icons and demo GIFs
+
+The `.clinerules` file in the project root outlines overall architecture guidance for contributors.
+
+## Tool Use Guidelines Source
+
+Tool usage rules are embedded in the system prompt. Custom instructions are appended via `addUserInstructions` in `src/core/prompts/system.ts`:
+
+```
+return `
+====
+USER'S CUSTOM INSTRUCTIONS
+The following additional instructions are provided by the user, and should be followed to the best of your ability without interfering with the TOOL USE guidelines.
+
+${customInstructions.trim()}`
+}
+```
+
+This mechanism ensures user instructions do not override the extension's tool use guidelines.
