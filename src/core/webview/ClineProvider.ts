@@ -32,6 +32,7 @@ import { Cline } from "../Cline"
 import { openMention } from "../mentions"
 import { getNonce } from "./getNonce"
 import { getUri } from "./getUri"
+import { Logger } from "../../services/logging/Logger"
 import { telemetryService } from "../../services/telemetry/TelemetryService"
 import { TelemetrySetting } from "../../shared/TelemetrySetting"
 import { validateThinkingBudget } from "../../utils/validation"
@@ -816,8 +817,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						await this.storeSecret("authNonce", nonce)
 
 						// Open browser for authentication with state param
-						console.log("Login button clicked in account page")
-						console.log("Opening auth page with state param")
+						Logger.log("Login button clicked in account page")
+						Logger.log("Opening auth page with state param")
 
 						const uriScheme = vscode.env.uriScheme
 
@@ -1117,7 +1118,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			vscode.window.showErrorMessage("Please enter a valid email address")
 			return
 		}
-		console.log("Subscribing email:", email)
+		Logger.log(`Subscribing email: ${email}`)
 		this.postMessageToWebview({ type: "emailSubscribed" })
 		// Currently ignoring errors to this endpoint, but after accounts we'll remove this anyways
 		try {
@@ -1132,7 +1133,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 					},
 				},
 			)
-			console.log("Email subscribed successfully. Response:", response.data)
+			Logger.log(`Email subscribed successfully. Response: ${JSON.stringify(response.data)}`)
 		} catch (error) {
 			console.error("Failed to subscribe email:", error)
 		}
@@ -1415,7 +1416,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 				throw new Error("Invalid response from MCP marketplace API")
 			}
 
-			console.log("[downloadMcp] Response from download API", { response })
+			Logger.log(`[downloadMcp] Response from download API ${JSON.stringify({ response })}`)
 
 			const mcpDetails = response.data
 
@@ -1656,7 +1657,7 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 				console.error("Invalid response from OpenRouter API")
 			}
 			await fs.writeFile(openRouterModelsFilePath, JSON.stringify(models))
-			console.log("OpenRouter models fetched and saved", models)
+			Logger.log(`OpenRouter models fetched and saved ${JSON.stringify(models)}`)
 		} catch (error) {
 			console.error("Error fetching OpenRouter models:", error)
 		}
