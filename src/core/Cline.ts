@@ -18,6 +18,7 @@ import { findToolName, formatContentBlockToMarkdown } from "../integrations/misc
 import { extractTextFromFile } from "../integrations/misc/extract-text"
 import { showSystemNotification } from "../integrations/notifications"
 import { TerminalManager } from "../integrations/terminal/TerminalManager"
+import { Logger } from "../services/logging/Logger"
 import { BrowserSession } from "../services/browser/BrowserSession"
 import { UrlContentFetcher } from "../services/browser/UrlContentFetcher"
 import { listFiles } from "../services/glob/list-files"
@@ -380,7 +381,7 @@ export class Cline {
 			this.providerRef.deref()?.postMessageToWebview({ type: "relinquishControl" })
 		}
 
-		console.log("presentMultifileDiff", messageTs)
+		Logger.log(`presentMultifileDiff ${messageTs}`)
 		const messageIndex = this.clineMessages.findIndex((m) => m.ts === messageTs)
 		const message = this.clineMessages[messageIndex]
 		if (!message) {
@@ -1381,7 +1382,7 @@ export class Cline {
 		} catch (error) {
 			const isOpenRouter = this.api instanceof OpenRouterHandler
 			if (isOpenRouter && !this.didAutomaticallyRetryFailedApiRequest) {
-				console.log("first chunk failed, waiting 1 second before retrying")
+				Logger.log("first chunk failed, waiting 1 second before retrying")
 				await delay(1000)
 				this.didAutomaticallyRetryFailedApiRequest = true
 			} else {
@@ -1616,7 +1617,7 @@ export class Cline {
 
 				const handleError = async (action: string, error: Error) => {
 					if (this.abandoned) {
-						console.log("Ignoring error since task was abandoned (i.e. from task cancellation after resetting)")
+						Logger.log("Ignoring error since task was abandoned (i.e. from task cancellation after resetting)")
 						return
 					}
 					const errorString = `Error ${action}: ${JSON.stringify(serializeError(error))}`
@@ -3120,7 +3121,7 @@ export class Cline {
 					// lastMessage.ts = Date.now() DO NOT update ts since it is used as a key for virtuoso list
 					lastMessage.partial = false
 					// instead of streaming partialMessage events, we do a save and post like normal to persist to disk
-					console.log("updating partial message", lastMessage)
+					Logger.log(`updating partial message ${JSON.stringify(lastMessage)}`)
 					// await this.saveClineMessages()
 				}
 
@@ -3202,7 +3203,7 @@ export class Cline {
 					}
 
 					if (this.abort) {
-						console.log("aborting stream...")
+						Logger.log("aborting stream...")
 						if (!this.abandoned) {
 							// only need to gracefully abort if this instance isn't abandoned (sometimes openrouter stream hangs, in which case this would affect future instances of cline)
 							await abortStream("user_cancelled")
